@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    >
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+        
+        <div class="section m-5">
+            <div class="card">
+                <div class="card-header">
+                    <h4>[[#{categoria.listado}]]</h4>
+                </div>
+                <div class="card-footer">
+                    <ul>
+                        <li th:each="c : ${categorias}">[[${c.descripcion}]]</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+
+        
+    </body>
+</html>
