@@ -61,4 +61,10 @@ public class ProductoService {
     public List<Producto> consultaSQL(double precioInf, double precioSup){
         return productoRepository.consultaSQL(precioInf, precioSup);
     } 
+    
+    // Metodo para buscar producto por nombre/palabra clave
+    @Transactional(readOnly = true)
+    public List<Producto> buscarPorPalabraClave(String palabraClave) {
+        return productoRepository.findByDescripcionContainingIgnoreCase(palabraClave);
+    }
 }

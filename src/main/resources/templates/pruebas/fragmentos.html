@@ -161,7 +161,34 @@
                                 </div>
                             </form>
                         </div>
-                        
+                        <!-- Formulario para la consulta extendida por nombre/palabra clave -->
+                        <div class='col-md-4'>
+                            <form method='post'
+                                  th:action='@{/pruebas/query4}'
+                                  class='was-validated'>
+                                <div class='card'>
+                                    <div class='card-header bg-info text-white text-center'>
+                                        <h5 class='card-title'>Búsqueda por palabra clave</h5>
+                                    </div>
+                                    <div class='card-body'>
+                                        <div class='mb-3'>
+                                            <label>Palabra clave</label>
+                                            <input type='text'
+                                                   class='form-control'
+                                                   th:value='${palabraClave}'
+                                                   name='palabraClave'
+                                                   required='true'/>
+                                        </div>
+                                    </div>
+                                    <div class='card-footer text-center'>
+                                        <button type='submit'
+                                                class='btn btn-info'>
+                                            <i class='fas fa-magnifying-glass'></i> Buscar
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class='col-md-1'></div>

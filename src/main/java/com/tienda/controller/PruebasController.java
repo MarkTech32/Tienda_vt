@@ -81,4 +81,13 @@ public class PruebasController {
         return "/pruebas/listado2";
         
     }
+    
+    @PostMapping("/query4")
+    public String query4(Model model,
+            @RequestParam("palabraClave") String palabraClave) {
+        var lista = productoService.buscarPorPalabraClave(palabraClave);
+        model.addAttribute("productos", lista);
+        model.addAttribute("palabraClave", palabraClave);
+        return "/pruebas/listado2";
+    }
 }

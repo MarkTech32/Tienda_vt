@@ -23,4 +23,8 @@ public interface ProductoRepository extends JpaRepository<Producto,Long>{
     public List<Producto> consultaSQL(
             @Param("precioInf") double precioInf, 
             @Param("precioSup") double precioSup);
+    
+    //Consulta para buscar productos pro el nombre (sin importar el uso de mayusculas)
+    public List<Producto> findByDescripcionContainingIgnoreCase(String palabraClave);
+
 }
