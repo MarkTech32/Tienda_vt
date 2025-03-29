@@ -84,7 +84,7 @@ public class ProjectConfig implements WebMvcConfigurer{
                 .addResourceLocations("classpath:/static.fav/");
     }*/
     
-    
+    //Metodo para ignorar los requests que hace para las imagenes fav asi denegandome el acceso a la pagina web
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/fav/**");
