@@ -14,10 +14,13 @@ public class ProductoService {
     private ProductoRepository productoRepository;
     
     
-    @Transactional(readOnly=true)
-    public List<Producto> getProductos(boolean activos){
+    @Transactional(readOnly = true)
+    public List<Producto> getProductos(boolean activos) {
         var lista = productoRepository.findAll();
-        
+        if (activos) {
+            lista.removeIf(e -> !e.isActivo());  // Usa el método getter en lugar del campo directo
+        }
+
         return lista;
     }
     
