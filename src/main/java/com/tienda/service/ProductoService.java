@@ -18,7 +18,6 @@ public class ProductoService {
     public List<Producto> getProductos(boolean activos){
         var lista = productoRepository.findAll();
         
-        
         return lista;
     }
     
