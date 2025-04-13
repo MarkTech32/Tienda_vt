@@ -24,45 +24,41 @@
         
         
         
-        <!-- fragmento 3 para el listado de productos -->
-        <section th:fragment="listado" class="p-3">
+        <!-- fragmento 2 para el listado de productos en el carrito -->
+        <section th:fragment="listado">
             <div class="row p-3">
                 <div class="col-md-9">
                     <div class="card p-2">
                         <div class="card-header">
-                            <h4>[[#{producto.listado}]]</h4>
+                            <h4>[[#{carrito.titulo}]]</h4>
                         </div>
                         <div class="card-body">
-                            <div th:if="${productos != null and !productos.empty}">
+                            <div th:if="${listaItems != null and !listaItems.empty}">
                                 <table class="table table-dark table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>[[#{producto.descripcion}]]</th>
                                             <th>[[#{producto.precio}]]</th>
-                                            <th>[[#{producto.existencias}]]</th>
-                                            <th>[[#{producto.total}]]</th>
+                                            <th>[[#{carrito.cantidad}]]</th>
+                                            <th>[[#{carrito.total}]]</th>
                                             <th>[[#{producto.imagen}]]</th>
-                                            <th>[[#{producto.activo}]]</th>
-                                            <th>[[#{producto.categoria}]]</th>
-                                            <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="c : ${productos}">
-                                            <td>[[${c.idProducto}]]</td>
-                                            <td>[[${c.descripcion}]]</td>
-                                            <td>[[${c.precio}]]</td>
-                                            <td>[[${c.existencias}]]</td>
-                                            <td>[[${c.precio}*${c.existencias}]]</td>
-                                            <td><img th:src="@{${c.rutaImagen}}" alt="noData" height="75"/></td>
-                                            <td th:text="${c.activo} ? 'Activa':'Inactiva'"></td>
-                                            <td>[[${c.categoria.descripcion}]]</td>
-                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                                <a class="btn btn-danger" th:href="@{/producto/eliminar/}+${c.idProducto}">
+                                        <tr th:each="item : ${listaItems}">
+                                            <td>[[${item.idProducto}]]</td>
+                                            <td>[[${item.descripcion}]]</td>
+                                            <td>[[${item.precio}]]</td>
+                                            <td>[[${item.cantidad}]]</td>
+                                            <td>[[${item.precio}*${item.cantidad}]]</td>
+                                            <td><img th:src="@{${item.rutaImagen}}" alt="noData" height="75"/></td>
+                                            <td>
+                                                <a class="btn btn-danger" th:href="@{/carrito/eliminar/}+${item.idProducto}">
                                                     <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
                                                 </a>
-                                                <a class="btn btn-success" th:href="@{/producto/modificar/}+${c.idProducto}">
+                                                <a class="btn btn-success" th:href="@{/carrito/modificar/}+${item.idProducto}">
                                                     <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
                                                 </a>
 
@@ -71,7 +67,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="text-center p-2" th:if="${productos == null or productos.empty}">
+                            <div class="text-center p-2" th:if="${listaItems == null or listaItems.empty}">
                                 <span>[[#{lista.vacia}]]</span>
                             </div>
 
@@ -79,16 +75,84 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-center bg-success text-white mb-3">
+                    <div class="card text-center bg-primary text-white mb-3">
                         <div class="card-body">
-                            <h3>[[#{producto.total}]]</h3>
-                            <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalProductos}]]</h4>
+                            <h3>[[#{carrito.totalCompra}]]</h3>
+                            <h4 class="fs-4">
+                                ₡[[${totalCompra}]]
+                            </h4>
                         </div>
                     </div>
+                    <div class="card text center bg-success text-white mb-3">
+                        <div class="card-body">
+                            <a th:href="@{/}"
+                               class="btn btn-sucess">
+                                <i class="fas fa-reply"></i> [[#{carrito.seguirComprando}]]
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card text center bg-info text-white mb-3">
+                        <div class="card-body">
+                            <a th:href="@{/facturar/carrito}"
+                               class="btn btn-info">
+                                <i class="fas fa-forward"></i> [[#{carrito.facturar}]]   
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        
+        <section th:fragment="editarItem">
+        <div class="row row-cols-6 p-10">
+            <a th:href="@{/carrito/listado}"
+                class="btn btn-primary">
+                <i class="fas fa-replay"></i> [[#{accion.regresar}]]
+            </a>
+        </div>
+        <div class="row row-cols-2">
+            <div class="card">
+                <div class="card-header">[[#{carrito.datos}]]</div>
+                <div class="card-body">
+                    <h5 class="card-title">[[${item.descripcion}]]</h5>
+                    <h6 class="card-subtitle mb-2 text-muted text-end">
+                        ₡[[${item.precio}]] ([[${item.existencias}]])
+                    </h6>
+                    <p class="card-text">[[${item.detalle}]]</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <figure>
+                        <img th:src="@{${item.rutaImagen}}" width="120"/>
+                    </figure>
+                    <form th:action="@{/carrito/guardar}"
+                          method="post" th:object="${item}">
+                        <input type="hidden"
+                               name="idProducto"
+                               th:field="*{idProducto}"/>
+                        <div class="form-group">
+                            <label>[[#{carrito.cantidad}]]</label>
+                            <input type="number"
+                                   name="cantidad"
+                                   th:field="*{cantidad}"
+                                   min="1"
+                                   th:max="${item.existencias}"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fas fa-save"></i> [[#{accion.guardar}]]
+                            </button>
+                        </div>
+                    </form>
+                    <a th:href="@{/carrito/eliminar/}+${item.idProducto}"
+                        class="btn btn-danger">
+                        <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                    </a>
+                </div>
+            </div>
+        </div>
+      </section>
     </body>
 </html>
